@@ -7,17 +7,38 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <ListBox Name="ListBox" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="158" SelectionChanged="ListBox_SelectionChanged"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="744,329,0,0" VerticalAlignment="Top" Name="LabelReq"/>
-        <Button Content="TEST-Button" HorizontalAlignment="Left" Margin="581,364,0,0" VerticalAlignment="Top" Width="147" Click="Button_Click" Height="23"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="173,364,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="408" TextChanged="TextBox_TextChanged"/>
-        <ListView HorizontalAlignment="Left" Height="324" Margin="168,10,0,0" VerticalAlignment="Top" Width="560">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="100" Width="200"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox Name="ListBox"  Grid.Column="0" Grid.Row="0" Margin="5,5,5,5"  SelectionChanged="ListBox_SelectionChanged" />
+        <StackPanel Grid.Column="1" HorizontalAlignment="Stretch"  Margin="5,5,5,5" VerticalAlignment="Stretch" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Label" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Top" Name="LabelReq"/>
+                <Button Content="TEST-Button" Margin="0,5,14.333,0" VerticalAlignment="Top" Click="Button_Click" Height="23" Grid.Column="1" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="69"/>
+            </Grid>
+            <ListView Height="320" Margin="5,5,10.333,5" VerticalAlignment="Top">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Orientation="Horizontal">
+                <TextBox HorizontalAlignment="Left" Height="23" Margin="5,5,5,5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="408" TextChanged="TextBox_TextChanged" Name="txtMessage"/>
+                <Button Name="btnSend" Content="Send" Width="85"/>
+            </StackPanel>
+        </StackPanel>
 
     </Grid>
 </Window>
