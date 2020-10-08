@@ -40,22 +40,43 @@ namespace Chat
 
         private void ReadChatStatus()
         {
+            StreamReader stream = QueryChatStatus();
+
+            try
+            {
+                string value = stream.ReadToEnd();
+
+                PopulateUI(ParseJson(value));
+            }
+            finally
+            {
+                stream.Dispose();
+            }
+        }
+
+        private static StreamReader QueryChatStatus()
+        {
             string url = "http://192.168.110.213:3000/";
             var req = HttpWebRequest.Create(url);
             var response = req.GetResponse();
-            using (var stream = new StreamReader(
-                response.GetResponseStream(), Encoding.UTF8
-            ))
+
+            var stream = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+            return stream;
+        }
+
+        private dynamic ParseJson(string value)
+        {
+            return JsonConvert.DeserializeObject(value);
+        }
+
+        private void PopulateUI(dynamic stuff)
+        {
+            ListBox.Items.Clear();
+            foreach (var userName in stuff.users)
             {
-                string value = stream.ReadToEnd();
-                dynamic stuff = JsonConvert.DeserializeObject(value);
-                ListBox.Items.Clear();
-                foreach (var userName in stuff.users)
-                {
-                    var item = new ListBoxItem();
-                    item.Content = userName;
-                    ListBox.Items.Add(item);
-                }
+                var item = new ListBoxItem();
+                item.Content = userName;
+                ListBox.Items.Add(item);
             }
         }
 
