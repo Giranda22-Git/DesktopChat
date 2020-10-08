@@ -11,13 +11,7 @@
         <Label Content="Label" HorizontalAlignment="Left" Margin="744,329,0,0" VerticalAlignment="Top" Name="LabelReq"/>
         <Button Content="TEST-Button" HorizontalAlignment="Left" Margin="581,364,0,0" VerticalAlignment="Top" Width="147" Click="Button_Click" Height="23"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="173,364,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="408" TextChanged="TextBox_TextChanged"/>
-        <ListView HorizontalAlignment="Left" Height="324" Margin="168,10,0,0" VerticalAlignment="Top" Width="560">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <ListBox HorizontalAlignment="Left" Height="326" Margin="173,10,0,0" VerticalAlignment="Top" Width="555"/>
 
     </Grid>
 </Window>
