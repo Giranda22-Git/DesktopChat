@@ -35,6 +35,11 @@ namespace Chat
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            ReadChatStatus();
+        }
+
+        private void ReadChatStatus()
+        {
             string url = "http://192.168.110.213:3000/";
             var req = HttpWebRequest.Create(url);
             var response = req.GetResponse();
