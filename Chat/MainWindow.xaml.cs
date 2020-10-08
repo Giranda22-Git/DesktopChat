@@ -78,6 +78,14 @@ namespace Chat
                 item.Content = userName;
                 ListBox.Items.Add(item);
             }
+
+            MessagesView.Items.Clear();
+            foreach(var message in stuff.messages)
+            {
+                var item = new ListViewItem();
+                item.Content = message.name + " >> " + message.text ;                
+                MessagesView.Items.Add(item);
+            }
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -87,7 +95,7 @@ namespace Chat
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            ReadChatStatus();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)

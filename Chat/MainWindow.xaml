@@ -25,14 +25,19 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Label" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Top" Name="LabelReq"/>
-                <Button Content="TEST-Button" Margin="0,5,14.333,0" VerticalAlignment="Top" Click="Button_Click" Height="23" Grid.Column="1" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="69"/>
+                <Button x:Name="btnTestQuery" Content="TEST-Button" Margin="0,5,14.333,0" VerticalAlignment="Top" Click="Button_Click" Height="23" Grid.Column="1" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="69"/>
             </Grid>
-            <ListView Height="320" Margin="5,5,10.333,5" VerticalAlignment="Top">
+            <ListView Name="MessagesView" Height="320" Margin="5,5,10.333,5" VerticalAlignment="Top">
                 <ListView.View>
                     <GridView>
+                        <GridViewColumn Width="100"/>
                         <GridViewColumn/>
                     </GridView>
                 </ListView.View>
+                <ListBoxItem Content="sdfsdfsdf"/>
+                <ListBoxItem/>
+                <ListBoxItem/>
+                <ListBoxItem/>
             </ListView>
             <StackPanel Orientation="Horizontal">
                 <TextBox HorizontalAlignment="Left" Height="23" Margin="5,5,5,5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="408" TextChanged="TextBox_TextChanged" Name="txtMessage"/>
