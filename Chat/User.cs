@@ -9,6 +9,7 @@ namespace Chat
     public class User
     {
         public string Name { get; set; }
+        public string FavoriteColor { get; set; }
 
         public override string ToString()
         {

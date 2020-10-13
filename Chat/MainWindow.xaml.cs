@@ -27,6 +27,8 @@ namespace Chat
     {
         private List<User> userList;
 
+        private string[] DefColors = { "black", "green", "red", "purple", "blue", "orange" };
+
         public MainWindow()
         {
             InitializeComponent();
@@ -54,7 +56,7 @@ namespace Chat
 
                 var stuff = ParseJson(value);
 
-                FillUsers(stuff);
+                PopulateUsers(stuff);
 
                 PopulateUI(stuff);
             }
@@ -64,12 +66,13 @@ namespace Chat
             }
         }
 
-        private void FillUsers(dynamic stuff)
+        private void PopulateUsers(dynamic stuff)
         {
+            var rnd = new Random();
             userList.Clear();
             foreach (var userName in stuff.users)
             {
-                userList.Add(new User { Name = userName });
+                userList.Add(new User { Name = userName, FavoriteColor = DefColors[rnd.Next(DefColors.Length-1)] });
             }
         }
 
@@ -90,7 +93,22 @@ namespace Chat
 
         private void PopulateUI(dynamic stuff)
         {
-            ListBox.ItemsSource = userList;
+            ListBox.Items.Clear();
+            foreach (var user in userList)
+            {
+                var item = new ListBoxItem();
+                var nameBinding = new Binding("Name")
+                {
+                    Source = user
+                };
+                item.SetBinding(ContentProperty, nameBinding);
+
+                var colorBinding = new Binding("FavoriteColor");
+                colorBinding.Source = user;
+                item.SetBinding(ForegroundProperty, colorBinding);
+
+                ListBox.Items.Add(item);
+            }
 
             MessagesView.Items.Clear();
             foreach(var message in stuff.messages)
