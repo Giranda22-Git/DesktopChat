@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.IO;
 using Newtonsoft.Json;
 using System.Windows.Threading;
+using System.Collections;
 
 namespace Chat
 {
@@ -24,9 +25,14 @@ namespace Chat
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<User> userList;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            userList = new List<User>();
+
             dynamic timer = new DispatcherTimer();
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan( 0, 0, 1 );
@@ -46,11 +52,24 @@ namespace Chat
             {
                 string value = stream.ReadToEnd();
 
-                PopulateUI(ParseJson(value));
+                var stuff = ParseJson(value);
+
+                FillUsers(stuff);
+
+                PopulateUI(stuff);
             }
             finally
             {
                 stream.Dispose();
+            }
+        }
+
+        private void FillUsers(dynamic stuff)
+        {
+            userList.Clear();
+            foreach (var userName in stuff.users)
+            {
+                userList.Add(new User { Name = userName });
             }
         }
 
@@ -71,13 +90,7 @@ namespace Chat
 
         private void PopulateUI(dynamic stuff)
         {
-            ListBox.Items.Clear();
-            foreach (var userName in stuff.users)
-            {
-                var item = new ListBoxItem();
-                item.Content = userName;
-                ListBox.Items.Add(item);
-            }
+            ListBox.ItemsSource = userList;
 
             MessagesView.Items.Clear();
             foreach(var message in stuff.messages)
