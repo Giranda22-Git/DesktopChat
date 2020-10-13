@@ -14,7 +14,16 @@
             <ColumnDefinition MinWidth="100" Width="200"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <ListBox Name="ListBox"  Grid.Column="0" Grid.Row="0" Margin="5,5,5,5"  SelectionChanged="ListBox_SelectionChanged" />
+        <ListBox Name="ListBox"  Grid.Column="0" Grid.Row="0" Margin="5,5,5,5"  SelectionChanged="ListBox_SelectionChanged" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding ImageUrl}" Width="64" Height="32"/>
+                        <TextBlock Text="{Binding Name}" Foreground="{Binding FavoriteColor}"/>
+                    </StackPanel> 
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <StackPanel Grid.Column="1" HorizontalAlignment="Stretch"  Margin="5,5,5,5" VerticalAlignment="Stretch" >
             <Grid>
                 <Grid.RowDefinitions>
@@ -28,12 +37,16 @@
                 <Button x:Name="btnTestQuery" Content="TEST-Button" Margin="0,5,14.333,0" VerticalAlignment="Top" Click="Button_Click" Height="23" Grid.Column="1" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="69"/>
             </Grid>
             <ListView Name="MessagesView" Height="320" Margin="5,5,10.333,5" VerticalAlignment="Top">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Width="150"/>
-                        <GridViewColumn/>
-                    </GridView>
-                </ListView.View>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+                            <Image Source="{Binding User.ImageUrl}" Width="32" Height="32"/>
+                            <TextBlock Text="{Binding User.Name}" Foreground="{Binding User.FavoriteColor}"/>
+                            <TextBlock Text=">>"/>
+                            <TextBlock Text="{Binding Text}"/>
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
             <StackPanel Orientation="Horizontal">
                 <TextBox HorizontalAlignment="Left" Height="23" Margin="5,5,5,5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="408" TextChanged="TextBox_TextChanged" Name="txtMessage"/>

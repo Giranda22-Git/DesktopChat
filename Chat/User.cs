@@ -10,6 +10,8 @@ namespace Chat
     {
         public string Name { get; set; }
         public string FavoriteColor { get; set; }
+        public string ImageUrl { get; set; }
+
 
         public override string ToString()
         {

@@ -26,14 +26,21 @@ namespace Chat
     public partial class MainWindow : Window
     {
         private List<User> userList;
+        private List<Message> messageList;
 
         private string[] DefColors = { "black", "green", "red", "purple", "blue", "orange" };
+        private string[] DefIcons = {
+                "https://upload.wikimedia.org/wikipedia/commons/3/38/Wikipedia_User-ICON_byNightsight.png",
+                "https://upload.wikimedia.org/wikipedia/commons/5/50/Farm-Fresh_user_king.png",
+                "https://live.staticflickr.com/39/83249642_dfe7d7aa53_b.jpg"
+            };
 
         public MainWindow()
         {
             InitializeComponent();
 
             userList = new List<User>();
+            messageList = new List<Message>();
 
             dynamic timer = new DispatcherTimer();
             timer.Tick += new EventHandler(timer_Tick);
@@ -58,6 +65,18 @@ namespace Chat
 
                 PopulateUsers(stuff);
 
+                messageList.Clear();
+                foreach (var  msg in stuff.messages)
+                {
+                    var newMessage = new Message();
+                    newMessage.Text = msg.text;
+
+                    var newUser = from user in userList where user.Name == msg.name.ToString() select user;
+
+                    newMessage.User = userList.Find(u => u.Name == msg.name.ToString());
+                    messageList.Add(newMessage);
+                }
+
                 PopulateUI(stuff);
             }
             finally
@@ -72,7 +91,10 @@ namespace Chat
             userList.Clear();
             foreach (var userName in stuff.users)
             {
-                userList.Add(new User { Name = userName, FavoriteColor = DefColors[rnd.Next(DefColors.Length-1)] });
+                userList.Add(new User {
+                    Name = userName,
+                    FavoriteColor = DefColors[rnd.Next(DefColors.Length)],
+                    ImageUrl = DefIcons[rnd.Next(DefIcons.Length)] });
             }
         }
 
@@ -93,30 +115,8 @@ namespace Chat
 
         private void PopulateUI(dynamic stuff)
         {
-            ListBox.Items.Clear();
-            foreach (var user in userList)
-            {
-                var item = new ListBoxItem();
-                var nameBinding = new Binding("Name")
-                {
-                    Source = user
-                };
-                item.SetBinding(ContentProperty, nameBinding);
-
-                var colorBinding = new Binding("FavoriteColor");
-                colorBinding.Source = user;
-                item.SetBinding(ForegroundProperty, colorBinding);
-
-                ListBox.Items.Add(item);
-            }
-
-            MessagesView.Items.Clear();
-            foreach(var message in stuff.messages)
-            {
-                var item = new ListViewItem();
-                item.Content = message.name + " >> " + message.text ;                
-                MessagesView.Items.Add(item);
-            }
+            ListBox.ItemsSource = userList;
+            MessagesView.ItemsSource = messageList;
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
