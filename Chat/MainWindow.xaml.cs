@@ -56,7 +56,7 @@ namespace Chat
 
         private static StreamReader QueryChatStatus()
         {
-            string url = "http://192.168.110.213:3000/";
+            string url = "http://api.stepchat.site/";
             var req = HttpWebRequest.Create(url);
             var response = req.GetResponse();
 
