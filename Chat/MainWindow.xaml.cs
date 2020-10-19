@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using System.Windows.Threading;
 using System.Collections;
 using System.Threading;
+using System.Collections.ObjectModel;
 
 namespace Chat
 {
@@ -26,8 +27,8 @@ namespace Chat
     /// </summary>
     public partial class MainWindow : Window
     {
-        private List<User> userList;
-        private List<Message> messageList;
+        private ObservableCollection<User> userList;
+        private ObservableCollection<Message> messageList;
         dynamic stuff;
 
         private string[] DefColors = { "black", "green", "red", "purple", "blue", "orange" };
@@ -41,13 +42,9 @@ namespace Chat
         {
             InitializeComponent();
 
-            userList = new List<User>();
-            messageList = new List<Message>();
+            userList = new ObservableCollection<User>();
+            messageList = new ObservableCollection<Message>();
 
-            //dynamic timer = new DispatcherTimer();
-            //timer.Tick += new EventHandler(timer_Tick);
-            //timer.Interval = new TimeSpan( 0, 0, 1 );
-            //timer.Start();
             var timer = new Timer(OnTimer, null, 0, 1000);
         }
 
@@ -70,22 +67,23 @@ namespace Chat
                 string value = stream.ReadToEnd();
 
                 stuff = ParseJson(value);
+                
+                App.Current.Dispatcher.BeginInvoke((Action)delegate () {
+                    PopulateUsers(stuff);
 
-                PopulateUsers(stuff);
+                    messageList.Clear();
+                    foreach (var msg in stuff.messages)
+                    {
+                        var newMessage = new Message();
+                        newMessage.Text = msg.text;
 
-                messageList.Clear();
-                foreach (var  msg in stuff.messages)
-                {
-                    var newMessage = new Message();
-                    newMessage.Text = msg.text;
+                        var newUser = from user in userList where user.Name == msg.name.ToString() select user;
 
-                    var newUser = from user in userList where user.Name == msg.name.ToString() select user;
+                        newMessage.User = userList.ToList().Find(u => u.Name == msg.name.ToString());
+                        messageList.Add(newMessage);
+                    }
 
-                    newMessage.User = userList.Find(u => u.Name == msg.name.ToString());
-                    messageList.Add(newMessage);
-                }
-
-                ListBox.Dispatcher.Invoke(PopulateUIDefault);                
+                    PopulateUIDefault(); } );                
             }
             finally
             {
@@ -149,7 +147,11 @@ namespace Chat
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
         {
-            SendMessage();
+           if( SendMessage())
+            {
+                var sendThread = new Thread(ReadChatStatus);
+                sendThread.Start();
+            }
         }
 
         private bool SendMessage()
@@ -180,7 +182,7 @@ namespace Chat
                 using (var reader = new StreamReader(response.GetResponseStream()))
                 {
                     var responseString = reader.ReadToEnd();
-                    MessageBox.Show(responseString);
+                   // MessageBox.Show(responseString);
                 }
 
                 return response.StatusCode == HttpStatusCode.OK;
