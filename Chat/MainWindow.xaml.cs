@@ -149,7 +149,47 @@ namespace Chat
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
         {
+            SendMessage();
+        }
 
+        private bool SendMessage()
+        {
+            string url = "http://api.stepchat.site/message";
+            // name
+            // text
+            var request = (HttpWebRequest)HttpWebRequest.Create(url);
+
+            var postData = "{\"name\":\"test\",";
+            postData += $"\"text\":\"{txtMessage.Text}\"}}";
+            var data = Encoding.ASCII.GetBytes(postData);
+
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.ContentLength = data.Length;
+            request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)";
+            
+            using (var stream = request.GetRequestStream())
+            {
+                stream.Write(data, 0, data.Length);
+            }
+
+            try
+            {
+                var response = (HttpWebResponse)request.GetResponse();
+
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var responseString = reader.ReadToEnd();
+                    MessageBox.Show(responseString);
+                }
+
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+            catch(WebException we)
+            {
+                MessageBox.Show(we.Message);
+                return false;
+            }
         }
     }
 }
