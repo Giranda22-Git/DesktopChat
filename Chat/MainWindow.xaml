@@ -50,7 +50,7 @@
             </ListView>
             <StackPanel Orientation="Horizontal">
                 <TextBox HorizontalAlignment="Left" Height="23" Margin="5,5,5,5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="408" TextChanged="TextBox_TextChanged" Name="txtMessage"/>
-                <Button Name="btnSend" Content="Send" Width="85"/>
+                <Button Name="btnSend" Content="Send" Width="85" Click="btnSend_Click"/>
             </StackPanel>
         </StackPanel>
 

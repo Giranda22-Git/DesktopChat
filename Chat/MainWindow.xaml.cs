@@ -17,6 +17,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Windows.Threading;
 using System.Collections;
+using System.Threading;
 
 namespace Chat
 {
@@ -27,6 +28,7 @@ namespace Chat
     {
         private List<User> userList;
         private List<Message> messageList;
+        dynamic stuff;
 
         private string[] DefColors = { "black", "green", "red", "purple", "blue", "orange" };
         private string[] DefIcons = {
@@ -42,10 +44,16 @@ namespace Chat
             userList = new List<User>();
             messageList = new List<Message>();
 
-            dynamic timer = new DispatcherTimer();
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = new TimeSpan( 0, 0, 1 );
-            timer.Start();
+            //dynamic timer = new DispatcherTimer();
+            //timer.Tick += new EventHandler(timer_Tick);
+            //timer.Interval = new TimeSpan( 0, 0, 1 );
+            //timer.Start();
+            var timer = new Timer(OnTimer, null, 0, 1000);
+        }
+
+        private void OnTimer(object state)
+        {
+            ReadChatStatus();
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -61,7 +69,7 @@ namespace Chat
             {
                 string value = stream.ReadToEnd();
 
-                var stuff = ParseJson(value);
+                stuff = ParseJson(value);
 
                 PopulateUsers(stuff);
 
@@ -77,12 +85,17 @@ namespace Chat
                     messageList.Add(newMessage);
                 }
 
-                PopulateUI(stuff);
+                ListBox.Dispatcher.Invoke(PopulateUIDefault);                
             }
             finally
             {
                 stream.Dispose();
             }
+        }
+
+        private void PopulateUIDefault()
+        {
+            PopulateUI(stuff);
         }
 
         private void PopulateUsers(dynamic stuff)
@@ -130,6 +143,11 @@ namespace Chat
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void btnSend_Click(object sender, RoutedEventArgs e)
         {
 
         }
